@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Helix",
+      "hasCanvas": false,
+      "bodyTextLen": 800,
+      "bodyTextHash": "98f627ae2794ca48ccbb2f99c1b8ffa0305a94cfec35c01f1b49bfc53275042d",
+      "bodyTextPrefix": "Helix LLM desktop Telemetry Bench Lab Eval Suite Hardware Cost L",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Helix",
+      "hasCanvas": false,
+      "bodyTextLen": 713,
+      "bodyTextHash": "b9836c257c04db2901b10b5a428d51902ff18412b79f95d4564aa8f3b83ca6b8",
+      "bodyTextPrefix": "Helix LLM desktop Telemetry LLM telemetry Live speed, memory, qu",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}
