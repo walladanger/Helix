@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Helix</title>
+    <link rel="stylesheet" href="./shell.css" />
+    <script src="./shell.js" defer></script>
+  </head>
+  <body>
+    <header class="titlebar" aria-label="Helix window controls">
+      <div class="brand" data-tauri-drag-region>
+        <span class="logo" data-tauri-drag-region aria-hidden="true">⌁</span>
+        <span data-tauri-drag-region>HELIX</span>
+      </div>
+      <div class="spacer" data-tauri-drag-region title="Drag to move window"></div>
+      <button id="minimize" type="button" aria-label="Minimize">─</button>
+      <button id="maximize" type="button" aria-label="Maximize or restore">□</button>
+      <button id="close" type="button" aria-label="Close">×</button>
+    </header>
+    <main>
+      <div id="status" role="status">Starting Helix…</div>
+      <iframe id="application" title="Helix application" hidden></iframe>
+    </main>
+  </body>
+</html>

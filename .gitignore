@@ -1,4 +1,7 @@
 node_modules/
+.output/
+src-tauri/target/
+src-tauri/binaries/
 .project_id
 .github_repo
 .env
