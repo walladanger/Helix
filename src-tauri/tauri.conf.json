@@ -31,7 +31,8 @@
     "externalBin": ["binaries/node"],
     "resources": {
       "../.output/server": "server",
-      "../.output/public": "public"
+      "../.output/public": "public",
+      "../.runtime/llama": "runtimes/llama"
     },
     "icon": ["icons/icon.ico"],
     "windows": {

@@ -42,6 +42,20 @@ npm run desktop:installer
 ```
 
 The NSIS installer is written under `src-tauri/target/release/bundle/nsis/`.
-The current app still requires the existing `XAI_API_KEY` environment variable
-for live xAI benchmarks. No agent telemetry integration is included; see
-[`docs/agent-connection-plan.md`](docs/agent-connection-plan.md).
+The installer build downloads and verifies a pinned Windows CUDA 12.4 llama.cpp
+release, then includes `llama-server.exe` and its runtime libraries. Model
+weights are not bundled. In desktop Settings, enter the absolute path to an
+existing `.gguf` file and select **Launch bundled llama.cpp**. It serves on
+`127.0.0.1:8080` with layer splitting across available CUDA GPUs and stops
+when Helix exits. NVIDIA CUDA compatible drivers are required for that build.
+
+Helix includes an LM Studio local API connection, but LM Studio itself must be
+installed and its server started separately. The OpenAI and Anthropic
+connections include request adapters and check whether `OPENAI_API_KEY` and
+`ANTHROPIC_API_KEY` are set in Helix's desktop environment; checking their
+status sends no inference requests. These adapters are not yet wired into Bench
+Lab. The existing xAI benchmarks still use `XAI_API_KEY`. All remaining
+catalogued runtimes have official installation links, not automatic installers
+or verified integrations. See [`docs/architecture/runtime-coverage.md`](docs/architecture/runtime-coverage.md)
+for their current support state and [`docs/agent-connection-plan.md`](docs/agent-connection-plan.md)
+for the separate local agent telemetry plan.

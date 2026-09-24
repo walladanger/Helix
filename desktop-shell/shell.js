@@ -16,6 +16,20 @@ void (async () => {
     // The installed React app runs on a loopback server; only this local shell
     // receives Tauri permissions. The framed app has no native shell privileges.
     const url = await core.invoke("wait_for_server");
+    const applicationOrigin = new URL(url).origin;
+    window.addEventListener("message", async (event) => {
+      if (event.source !== frame.contentWindow || event.origin !== applicationOrigin) return;
+      const message = event.data;
+      if (message?.type !== "helix:launch-llama" || typeof message.requestId !== "string"
+        || typeof message.modelPath !== "string" || message.modelPath.length > 4096) return;
+      let error;
+      try {
+        await core.invoke("launch_llama", { modelPath: message.modelPath });
+      } catch (caught) {
+        error = typeof caught === "string" ? caught : "Could not launch llama.cpp.";
+      }
+      frame.contentWindow?.postMessage({ type: "helix:launch-llama-result", requestId: message.requestId, error }, applicationOrigin);
+    });
     frame.addEventListener("load", () => {
       frame.hidden = false;
       status.hidden = true;

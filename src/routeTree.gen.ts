@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiBenchRouteImport } from './routes/api/bench'
+import { Route as ApiRuntimeStatusRouteImport } from './routes/api/runtime-status'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const ApiBenchRoute = ApiBenchRouteImport.update({
   path: '/api/bench',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiRuntimeStatusRoute = ApiRuntimeStatusRouteImport.update({
+  id: '/api/runtime-status',
+  path: '/api/runtime-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/bench': typeof ApiBenchRoute
+  '/api/runtime-status': typeof ApiRuntimeStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/bench': typeof ApiBenchRoute
+  '/api/runtime-status': typeof ApiRuntimeStatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/bench': typeof ApiBenchRoute
+  '/api/runtime-status': typeof ApiRuntimeStatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/bench'
+  fullPaths: '/' | '/api/bench' | '/api/runtime-status'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/bench'
-  id: '__root__' | '/' | '/api/bench'
+  to: '/' | '/api/bench' | '/api/runtime-status'
+  id: '__root__' | '/' | '/api/bench' | '/api/runtime-status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiBenchRoute: typeof ApiBenchRoute
+  ApiRuntimeStatusRoute: typeof ApiRuntimeStatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBenchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/runtime-status': {
+      id: '/api/runtime-status'
+      path: '/api/runtime-status'
+      fullPath: '/api/runtime-status'
+      preLoaderRoute: typeof ApiRuntimeStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiBenchRoute: ApiBenchRoute,
+  ApiRuntimeStatusRoute: ApiRuntimeStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

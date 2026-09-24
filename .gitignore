@@ -2,6 +2,7 @@ node_modules/
 .output/
 src-tauri/target/
 src-tauri/binaries/
+.runtime/
 .project_id
 .github_repo
 .env

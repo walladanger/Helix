@@ -10,7 +10,7 @@
     "dev": "node scripts/with-app-env.mjs vite dev --host 0.0.0.0 --port 8080",
     "build": "node scripts/with-app-env.mjs vite build && npm run db:migrate",
     "build:desktop-server": "node scripts/build-desktop-server.mjs",
-    "desktop:installer": "npm run build:desktop-server && node scripts/prepare-desktop-sidecar.mjs && tauri build --bundles nsis",
+    "desktop:installer": "npm run build:desktop-server && node scripts/prepare-desktop-sidecar.mjs && node scripts/prepare-llama-bundle.mjs && tauri build --bundles nsis",
     "db:migrate": "node scripts/migrate.mjs",
     "build:dev": "node scripts/with-app-env.mjs vite build --mode development",
     "preview": "node scripts/with-app-env.mjs vite preview",

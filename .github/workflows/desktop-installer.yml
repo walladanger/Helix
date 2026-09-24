@@ -3,12 +3,13 @@ name: Helix Windows installer
 on:
   workflow_dispatch:
   push:
-    branches: [main, "codex/helix-desktop-installer"]
+    branches: [main, "codex/helix-desktop-installer", "codex/helix-universal-runtimes"]
     paths:
       - "desktop-shell/**"
       - "src-tauri/**"
       - "scripts/build-desktop-server.mjs"
       - "scripts/prepare-desktop-sidecar.mjs"
+      - "scripts/prepare-llama-bundle.mjs"
       - "vite.config.ts"
       - "package.json"
       - "package-lock.json"
