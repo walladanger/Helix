@@ -20,18 +20,50 @@ struct Server {
 
 struct LlamaServer {
     child: Mutex<Option<Child>>,
-    executable: PathBuf,
+    directory: PathBuf,
+}
+
+fn cuda_available() -> bool {
+    let mut tools = vec![PathBuf::from("nvidia-smi")];
+    if let Some(program_files) = std::env::var_os("ProgramFiles") {
+        tools.push(PathBuf::from(program_files).join("NVIDIA Corporation").join("NVSMI").join("nvidia-smi.exe"));
+    }
+    for tool in tools {
+        let mut command = Command::new(tool);
+        command.arg("-L").stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null());
+        #[cfg(windows)]
+        command.creation_flags(0x08000000);
+        let Ok(mut probe) = command.spawn() else { continue };
+        let started = Instant::now();
+        while started.elapsed() < Duration::from_secs(2) {
+            match probe.try_wait() {
+                Ok(Some(status)) => { if status.success() { return true } else { break } },
+                Err(_) => break,
+                Ok(None) => thread::sleep(Duration::from_millis(50)),
+            }
+        }
+        let _ = probe.kill();
+        let _ = probe.wait();
+    }
+    false
 }
 
 #[tauri::command]
-fn launch_llama(model_path: String, llama: State<'_, LlamaServer>) -> Result<(), String> {
+fn launch_llama(model_path: String, backend: String, llama: State<'_, LlamaServer>) -> Result<String, String> {
     let model = PathBuf::from(model_path.trim());
     if !model.is_absolute() || !model.is_file()
         || model.extension().and_then(|value| value.to_str()).map(|value| !value.eq_ignore_ascii_case("gguf")).unwrap_or(true)
     {
         return Err("Choose the absolute path of an existing GGUF model.".into());
     }
-    if !llama.executable.is_file() {
+    if !["auto", "cpu", "cuda"].contains(&backend.as_str()) {
+        return Err("Unsupported llama.cpp backend.".into());
+    }
+    let selected = if backend == "auto" {
+        if cuda_available() { "cuda" } else { "cpu" }
+    } else { backend.as_str() };
+    let executable = llama.directory.join(selected).join("llama-server.exe");
+    if !executable.is_file() {
         return Err("The bundled llama.cpp server is missing. Reinstall Helix.".into());
     }
     let mut child = llama.child.lock().map_err(|_| "Runtime state is unavailable")?;
@@ -44,16 +76,17 @@ fn launch_llama(model_path: String, llama: State<'_, LlamaServer>) -> Result<(),
     let _port = TcpListener::bind("127.0.0.1:8080")
         .map_err(|_| "Port 8080 is occupied. Stop the existing server before launching.".to_string())?;
     drop(_port);
-    let mut command = Command::new(&llama.executable);
+    let mut command = Command::new(&executable);
     command.arg("--model").arg(&model)
-        .args(["--host", "127.0.0.1", "--port", "8080", "--n-gpu-layers", "99", "--split-mode", "layer"])
-        .current_dir(llama.executable.parent().ok_or("Runtime directory is missing")?)
+        .args(["--host", "127.0.0.1", "--port", "8080"])
+        .current_dir(executable.parent().ok_or("Runtime directory is missing")?)
         .stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null());
+    if selected == "cuda" { command.args(["--n-gpu-layers", "99", "--split-mode", "layer"]); }
     #[cfg(windows)]
     command.creation_flags(0x08000000); // CREATE_NO_WINDOW
     let spawned = command.spawn().map_err(|error| format!("Could not start llama.cpp: {error}"))?;
     *child = Some(spawned);
-    Ok(())
+    Ok(selected.to_string())
 }
 
 #[tauri::command]
@@ -114,7 +147,7 @@ fn main() {
             });
             app.manage(LlamaServer {
                 child: Mutex::new(None),
-                executable: resources.join("runtimes").join("llama").join("llama-server.exe"),
+                directory: resources.join("runtimes").join("llama"),
             });
             Ok(())
         })

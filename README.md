@@ -42,12 +42,15 @@ npm run desktop:installer
 ```
 
 The NSIS installer is written under `src-tauri/target/release/bundle/nsis/`.
-The installer build downloads and verifies a pinned Windows CUDA 12.4 llama.cpp
-release, then includes `llama-server.exe` and its runtime libraries. Model
-weights are not bundled. In desktop Settings, enter the absolute path to an
-existing `.gguf` file and select **Launch bundled llama.cpp**. It serves on
-`127.0.0.1:8080` with layer splitting across available CUDA GPUs and stops
-when Helix exits. NVIDIA CUDA compatible drivers are required for that build.
+Every Windows installer build downloads and verifies pinned llama.cpp CPU and
+CUDA 12.4 releases and includes both `llama-server.exe` builds and the CUDA
+libraries. There is no separate llama.cpp download step. Model weights are not
+bundled. In desktop Settings, enter the absolute path to an existing `.gguf`
+file and select **Launch bundled llama.cpp**. Automatic mode uses CUDA if an
+NVIDIA GPU is detected, otherwise the CPU build; you can select either backend
+manually. The server binds to `127.0.0.1:8080` and stops when Helix exits.
+CUDA mode splits layers across available NVIDIA GPUs, including dual RTX 3090
+systems, if the installed drivers and model support it.
 
 Helix includes an LM Studio local API connection, but LM Studio itself must be
 installed and its server started separately. The OpenAI and Anthropic

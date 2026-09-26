@@ -1,4 +1,6 @@
-export function launchBundledLlama(modelPath: string): Promise<void> {
+export type LlamaBackend = "auto" | "cpu" | "cuda";
+
+export function launchBundledLlama(modelPath: string, backend: LlamaBackend): Promise<string> {
   if (window.parent === window) return Promise.reject(new Error("Open Helix in the desktop installer to launch the bundled server."));
   const requestId = crypto.randomUUID();
   return new Promise((resolve, reject) => {
@@ -6,14 +8,16 @@ export function launchBundledLlama(modelPath: string): Promise<void> {
     function finish(error?: Error) {
       clearTimeout(timeout);
       window.removeEventListener("message", receive);
-      if (error) reject(error); else resolve();
+      if (error) reject(error); else resolve(selectedBackend ?? backend);
     }
+    let selectedBackend: string | undefined;
     function receive(event: MessageEvent) {
       if (event.source !== window.parent || event.data?.type !== "helix:launch-llama-result"
         || event.data.requestId !== requestId) return;
+      selectedBackend = typeof event.data.backend === "string" ? event.data.backend : undefined;
       finish(event.data.error ? new Error(String(event.data.error)) : undefined);
     }
     window.addEventListener("message", receive);
-    window.parent.postMessage({ type: "helix:launch-llama", requestId, modelPath }, "*");
+    window.parent.postMessage({ type: "helix:launch-llama", requestId, modelPath, backend }, "*");
   });
 }

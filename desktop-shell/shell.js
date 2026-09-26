@@ -21,14 +21,16 @@ void (async () => {
       if (event.source !== frame.contentWindow || event.origin !== applicationOrigin) return;
       const message = event.data;
       if (message?.type !== "helix:launch-llama" || typeof message.requestId !== "string"
-        || typeof message.modelPath !== "string" || message.modelPath.length > 4096) return;
+        || typeof message.modelPath !== "string" || message.modelPath.length > 4096
+        || !["auto", "cpu", "cuda"].includes(message.backend)) return;
       let error;
+      let backend;
       try {
-        await core.invoke("launch_llama", { modelPath: message.modelPath });
+        backend = await core.invoke("launch_llama", { modelPath: message.modelPath, backend: message.backend });
       } catch (caught) {
         error = typeof caught === "string" ? caught : "Could not launch llama.cpp.";
       }
-      frame.contentWindow?.postMessage({ type: "helix:launch-llama-result", requestId: message.requestId, error }, applicationOrigin);
+      frame.contentWindow?.postMessage({ type: "helix:launch-llama-result", requestId: message.requestId, error, backend }, applicationOrigin);
     });
     frame.addEventListener("load", () => {
       frame.hidden = false;

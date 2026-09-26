@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { GPU_PROFILES, MODELS, type GpuId, type ModelId } from "@/lib/models";
 import { PROVIDERS, RUNTIMES, runtimeById } from "@/lib/runtimes/catalog";
-import { launchBundledLlama } from "@/lib/runtimes/desktop-launch";
+import { launchBundledLlama, type LlamaBackend } from "@/lib/runtimes/desktop-launch";
 import type { ProbeResult } from "@/lib/runtimes/contracts";
 import { useDesk } from "@/lib/store";
 import { Note, Section } from "./shared";
@@ -20,6 +20,7 @@ export function SettingsApp() {
   const [runtimeStatus, setRuntimeStatus] = useState<RuntimeStatus | null>(null);
   const [optionalRuntimeId, setOptionalRuntimeId] = useState("ollama");
   const [modelPath, setModelPath] = useState("");
+  const [llamaBackend, setLlamaBackend] = useState<LlamaBackend>("auto");
   const [launchMessage, setLaunchMessage] = useState("");
   const [launching, setLaunching] = useState(false);
   useEffect(() => {
@@ -92,12 +93,21 @@ export function SettingsApp() {
           <input type="text" value={modelPath} onChange={(event) => setModelPath(event.target.value)}
             placeholder="C:\\Models\\model.gguf" className="h-11 w-full rounded-sm bg-dusk px-3 text-sm text-ink outline-none ring-1 ring-ink/10" />
         </label>
+        <label className="block space-y-1.5 text-sm">
+          <span className="text-muted">llama.cpp processing</span>
+          <select value={llamaBackend} onChange={(event) => setLlamaBackend(event.target.value as LlamaBackend)}
+            className="h-11 w-full rounded-sm bg-dusk px-3 text-sm text-ink outline-none ring-1 ring-ink/10">
+            <option value="auto">Automatic: NVIDIA CUDA if detected, otherwise CPU</option>
+            <option value="cuda">NVIDIA CUDA</option>
+            <option value="cpu">CPU</option>
+          </select>
+        </label>
         <Button disabled={launching || !modelPath.trim()} onClick={async () => {
           setLaunching(true);
           setLaunchMessage("");
           try {
-            await launchBundledLlama(modelPath);
-            setLaunchMessage("llama.cpp started. The model may take a moment to load; reopen Settings to check status.");
+            const selected = await launchBundledLlama(modelPath, llamaBackend);
+            setLaunchMessage(`llama.cpp ${selected.toUpperCase()} started. The model may take a moment to load; status updates here automatically.`);
           } catch (error) {
             setLaunchMessage(error instanceof Error ? error.message : "Could not start llama.cpp.");
           } finally { setLaunching(false); }
