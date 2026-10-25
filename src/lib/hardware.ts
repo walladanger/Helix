@@ -1,4 +1,4 @@
-import { gpuMeta, SERVING_ARCH, type GpuId } from "./models";
+import { gpuMeta, SERVING_ARCH, type GpuId } from "./models.ts";
 
 export function kvBytesPerToken(arch = SERVING_ARCH) {
   return 2 * arch.nLayers * arch.nKvHeads * arch.headDim * arch.bytes;
@@ -34,7 +34,7 @@ export function kvFragmentation(seqLen: number, batch = 1) {
 
 export function smEfficiency(tokensPerSec: number, seqLen: number, gpuId: GpuId) {
   const gpu = gpuMeta(gpuId);
-  const bytesPerTok = kvBytesPerToken() + SERVING_ARCH.hiddenSize * SERVING_ARCH.bytes;
+  const bytesPerTok = kvCacheBytes(seqLen, 1) + SERVING_ARCH.hiddenSize * SERVING_ARCH.bytes;
   const required = tokensPerSec * bytesPerTok;
   const bandwidth = gpu.bandwidthTBps * 1e12;
   const memBound = bandwidth === 0 ? 0 : (required / bandwidth) * 100;
