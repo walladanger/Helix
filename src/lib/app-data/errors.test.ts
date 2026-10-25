@@ -94,4 +94,65 @@ describe("classifyCallToolError", () => {
     assert.equal(empty?.message, "Something went wrong. Try again.");
     assert.equal(empty?.detail, undefined);
   });
+
+  it("handles case-insensitive matching for missing_connector_token", () => {
+    const state = classifyCallToolError({
+      ok: false,
+      data: null,
+      errorMessage: "MISSING_CONNECTOR_TOKEN: some detail",
+    });
+    assert.equal(state?.kind, "error");
+    assert.match(state?.message ?? "", /Open this app from Grok/);
+  });
+
+  it("prioritizes pending over missing_connector_token and other errors", () => {
+    const state = classifyCallToolError({
+      ok: false,
+      data: null,
+      pending: true,
+      errorMessage: "missing_connector_token access_denied",
+    });
+    assert.equal(state?.kind, "pending");
+  });
+
+  it("prioritizes missing_connector_token over loginRequired", () => {
+    const state = classifyCallToolError({
+      ok: false,
+      data: null,
+      loginRequired: true,
+      errorMessage: "missing_connector_token",
+    });
+    assert.equal(state?.kind, "error");
+    assert.match(state?.message ?? "", /Open this app from Grok/);
+  });
+
+  it("prioritizes loginRequired over MESSAGE_RULES", () => {
+    const state = classifyCallToolError({
+      ok: false,
+      data: null,
+      loginRequired: true,
+      errorMessage: "access_denied",
+    });
+    assert.equal(state?.kind, "login");
+  });
+
+  it("handles empty errorMessage when ok is false", () => {
+    const state = classifyCallToolError({
+      ok: false,
+      data: null,
+      errorMessage: "",
+    });
+    assert.equal(state?.kind, "error");
+    assert.equal(state?.message, "Something went wrong. Try again.");
+    assert.equal(state?.detail, undefined);
+  });
+
+  it("matches upper case needles for MESSAGE_RULES correctly", () => {
+    const state = classifyCallToolError({
+      ok: false,
+      data: null,
+      errorMessage: "SCOPE_DENIED",
+    });
+    assert.equal(state?.kind, "scope_denied");
+  });
 });
