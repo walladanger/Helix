@@ -3,10 +3,10 @@ import { R as require_react, v as require_jsx_runtime } from "../_libs/@tanstack
 import { n as TSS_SERVER_FUNCTION, r as getServerFnById, t as createServerFn } from "./ssr.mjs";
 import { a as gpuMeta, i as SERVING_ARCH, n as GPU_PROFILES, r as MODELS, s as modelMeta, t as DEFAULT_MODEL } from "./models-1pMUrgZU.mjs";
 import { a as Settings2, c as Minus, d as FlaskConical, f as Cpu, i as Square, l as Leaf, o as Search, p as Activity, r as Trash2, s as Power, t as X, u as Gauge } from "../_libs/lucide-react.mjs";
-import { a as fmtMs, c as fmtTps, i as fmtBytes, l as fmtUsd, n as clamp, o as fmtNum, r as cn, s as fmtPct } from "./router-Cq2_cB3N.mjs";
+import { a as fmtMs, c as fmtTps, i as fmtBytes, l as fmtUsd, n as clamp, o as fmtNum, r as cn, s as fmtPct } from "./router-DexoqVMW.mjs";
 import { n as create, t as persist } from "../_libs/zustand.mjs";
 import { a as Area, c as ReferenceLine, i as XAxis, l as ResponsiveContainer, n as LineChart, o as Line, r as YAxis, s as CartesianGrid, t as AreaChart, u as Tooltip } from "../_libs/recharts+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-DwxICiUU.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-l-6b6DR3.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function Button({ variant = "primary", className, type = "button", ...props }) {
