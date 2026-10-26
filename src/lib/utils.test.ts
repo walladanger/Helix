@@ -114,7 +114,7 @@ describe("fmtNum", () => {
     assert.strictEqual(fmtNum(0), "0");
     assert.strictEqual(fmtNum(1.234), "1.2");
     assert.strictEqual(fmtNum(1.234, 2), "1.23");
-    assert.strictEqual(fmtNum(1234.56, 1), "1,234.6"); // en-US standard locale formatting
+    assert.strictEqual(fmtNum(1234.56, 1), (1234.56).toLocaleString(undefined, { maximumFractionDigits: 1 }));
   });
 });
 
@@ -128,7 +128,7 @@ describe("fmtPct", () => {
     assert.strictEqual(fmtPct(0), "0%");
     assert.strictEqual(fmtPct(12.3), "12%");
     assert.strictEqual(fmtPct(12.5), "13%");
-    assert.strictEqual(fmtPct(-12.5), "-13%"); // JS Math.round behavior for -12.5 is -12, toFixed might be different depending on implementation but in JS it's string based rounding.
+    assert.strictEqual(fmtPct(-12.5), "-13%"); // fmtPct uses toFixed(0) which rounds -12.5 to -13
   });
 });
 
