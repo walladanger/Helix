@@ -2,7 +2,7 @@
 
 Windows-style desktop for measuring LLM speed, hardware, quality, and cost.
 
-![CI](https://img.shields.io/github/actions/workflow/status/walladanger/Helix/main.yml?branch=main&label=CI) ![npm-publish-github-packages](https://img.shields.io/github/actions/workflow/status/walladanger/Helix/npm-publish-github-packages.yml?branch=main&label=npm-publish-github-packages) ![webpack](https://img.shields.io/github/actions/workflow/status/walladanger/Helix/webpack.yml?branch=main&label=webpack)
+![CI](https://img.shields.io/github/actions/workflow/status/walladanger/Helix/webpack.yml?branch=main&label=CI)
 
 ![Helix desktop](screenshots/qa-home.png)
 
@@ -32,13 +32,15 @@ The architecture uses a central TanStack Router setup in `src/routes` which host
 
 ## Quick start
 
-Run the application or test it locally using standard npm commands:
+Requires Node.js 22. Run the application or test it locally using standard npm commands:
 
 ```bash
 npm install
 npm run dev
 npm run build
 npm test
+npm run typecheck
+npm run lint
 ```
 
 ## Configuration
@@ -46,8 +48,8 @@ npm test
 | Variable | Purpose | Default |
 | --- | --- | --- |
 | `XAI_API_KEY` | xAI API key for live Grok probes, evaluations, and measurements. | _None_ |
-| `DATABASE_URL` | Optional Postgres connection string. | _None_ |
-| `VITE_AUTH_ENABLED` | Feature flag to enable or disable authentication routes and flow. | `false` |
+| `DATABASE_URL` | Optional Postgres connection string; when unset, local/preview builds use the PGLite fallback and npm run build skips migrations. | _None_ |
+| `VITE_AUTH_ENABLED` | Feature flag to enable or disable authentication routes and flow. | `false` in .grok/app-env.json for local dev; auth is on if unset. Read by dev/build/preview via scripts/with-app-env.mjs. |
 
 ## Screenshots
 
