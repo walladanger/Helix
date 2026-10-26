@@ -1,2 +1,12 @@
-- name: ChatGPT & Codex Plugin Autopilot
-  uses: imMamdouhaboammar/chatgpt-codex-plugin-autopilot@v0.8.0
+name: Unused Workflow
+
+on:
+  push:
+    branches: [ "unused-branch-name-no-op" ]
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op
+        run: echo "This workflow is deliberately unused and preserved to satisfy GH actions parsing."
