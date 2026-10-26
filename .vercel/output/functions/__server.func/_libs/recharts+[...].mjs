@@ -1371,7 +1371,7 @@ var DefaultLegendContent = /*#__PURE__*/ function(_PureComponent) {
 	return _createClass$18(DefaultLegendContent, [
 		{
 			key: "renderIcon",
-			value: 
+			value:
 			/**
 			* Render the path of icon
 			* @param {Object} data Data of each legend item
@@ -9642,7 +9642,7 @@ var CartesianAxis = /*#__PURE__*/ function(_Component) {
 		},
 		{
 			key: "renderTicks",
-			value: 
+			value:
 			/**
 			* render the ticks
 			* @param {Array} ticks The ticks to actually render (overrides what was passed in props)

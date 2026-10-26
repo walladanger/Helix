@@ -29,7 +29,7 @@ Error generating stack: `+e.message+`
       `)}else f?o.write(`
         if (${n}.issues.length) {${c(n,r)}
         }
-        
+
         if (${n}.value === undefined) {
           if (${i}) {
             newResult[${r}] = undefined;
