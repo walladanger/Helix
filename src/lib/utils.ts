@@ -32,7 +32,7 @@ export function fmtBytes(n: number | null | undefined) {
   if (abs < 1024 ** 2) return `${(n / 1024).toFixed(1)} KB`;
   if (abs < 1024 ** 3) {
     const mb = n / 1024 ** 2;
-    return `${mb.toFixed(mb >= 100 ? 0 : 1)} MB`;
+    return `${mb.toFixed(Math.abs(mb) >= 100 ? 0 : 1)} MB`;
   }
   return `${(n / 1024 ** 3).toFixed(2)} GB`;
 }
