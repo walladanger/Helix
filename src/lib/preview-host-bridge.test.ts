@@ -1,31 +1,9 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-
-// Workaround for missing module resolution (`zod` and `./app-data/types`) in the minimal
-// strip-types environment. Extract and transpile the pure functions dynamically.
-import { transpile, ModuleKind, ScriptTarget } from "typescript";
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as url from "node:url";
-
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const sourcePath = path.join(__dirname, "preview-host-bridge.ts");
-const sourceCode = fs.readFileSync(sourcePath, "utf-8");
-
-const isSafeBridgePathCode = sourceCode.match(/export function isSafeBridgePath[\s\S]*?\n\}/)?.[0].replace("export ", "");
-const collectRoutePathsFromTreeCode = sourceCode.match(/export function collectRoutePathsFromTree[\s\S]*?\n\}/)?.[0].replace("export ", "");
-
-const tsOptions = { compilerOptions: { module: ModuleKind.CommonJS, target: ScriptTarget.ES2022 } };
-const jsIsSafeBridgePath = transpile(isSafeBridgePathCode || "", tsOptions.compilerOptions);
-const jsCollectRoutePathsFromTree = transpile(collectRoutePathsFromTreeCode || "", tsOptions.compilerOptions);
-
-const evalContext = new Function(`
-  const exports = {};
-  ${jsIsSafeBridgePath}
-  ${jsCollectRoutePathsFromTree}
-  return { isSafeBridgePath, collectRoutePathsFromTree };
-`);
-const { isSafeBridgePath, collectRoutePathsFromTree } = evalContext();
+import {
+  isSafeBridgePath,
+  collectRoutePathsFromTree,
+} from "./preview-host-bridge.ts";
 
 describe("isSafeBridgePath", () => {
   it("accepts valid relative app paths", () => {
@@ -45,7 +23,7 @@ describe("isSafeBridgePath", () => {
     assert.equal(isSafeBridgePath("data:text/html,test"), false);
     assert.equal(isSafeBridgePath("/\\foo"), false);
     assert.equal(isSafeBridgePath("\\foo"), false);
-    assert.equal(isSafeBridgePath("foo/bar"), false);
+    assert.equal(isSafeBridgePath("foo/bar"), false); // Doesn't start with /
   });
 });
 
