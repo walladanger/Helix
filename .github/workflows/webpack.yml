@@ -23,6 +23,6 @@ jobs:
     - run: npm run typecheck
     - run: npm run lint
     - run: npm test
-    - run: node scripts/with-app-env.mjs vite build
+    - run: PATH="$GITHUB_WORKSPACE/node_modules/.bin:$PATH" node scripts/with-app-env.mjs vite build
       env:
         VITE_PUBLIC_HOSTNAME: "dummy.grok.me"
