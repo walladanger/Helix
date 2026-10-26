@@ -55,9 +55,8 @@ export type CurrentUserState = {
  * call keeps a stable hook order across every render of a given component.
  */
 export function useCurrentUserState(): CurrentUserState {
-  const session = authClient.useSession();
   if (!authEnabled) return { user: DEV_USER, isPending: false };
-  const { data, isPending } = session;
+  const { data, isPending } = authClient.useSession();
   const user = data?.user;
   return {
     user: user
