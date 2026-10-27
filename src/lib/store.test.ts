@@ -188,7 +188,6 @@ describe("Store", () => {
 
   describe("useDesk data actions", () => {
     it("patches settings", () => {
-      // Need to cast to any for this particular test if the types mismatch or just valid types
       useDesk.getState().patchSettings({ kwhUsd: 0.2 });
       assert.equal(useDesk.getState().settings.kwhUsd, 0.2);
     });
@@ -230,7 +229,7 @@ describe("Store", () => {
     it("sets quality", () => {
       const qs: QualityScores = {
         at: 100,
-        model: "grok-2" as any,
+        model: "grok-2" as QualityScores["model"],
         mmlu: 85,
         gsm8k: 90,
         humanEval: 75,
