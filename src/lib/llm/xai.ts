@@ -1,4 +1,4 @@
-import { isModelId, modelMeta, type ModelId } from "../models";
+import { isModelId, modelMeta, type ModelId } from "../models.ts";
 
 export type ChatUsage = {
   promptTokens: number;
