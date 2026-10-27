@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AppId, BenchMetrics, HostSnapshot, QualityScores, Settings, WinState } from "./types";
-import { DEFAULT_MODEL } from "./models";
+import { DEFAULT_MODEL } from "./models.ts";
 
 const DEFAULTS: Record<AppId, Omit<WinState, "z" | "minimized" | "maximized">> = {
   telemetry: { id: "telemetry", x: 124, y: 28, w: 900, h: 600 },
