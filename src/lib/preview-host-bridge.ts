@@ -6,14 +6,14 @@
  */
 
 import { z } from "zod";
-import { CONNECTOR_TOKEN_READY_EVENT } from "./app-data/types";
-import { resolveParentEmbedderOrigin } from "./preview-embedder-origin";
+import { CONNECTOR_TOKEN_READY_EVENT } from "./app-data/types.ts";
+import { resolveParentEmbedderOrigin } from "./preview-embedder-origin.ts";
 
 export {
   isGrokEmbedderOrigin,
   isSandboxPreviewGuestHost,
   resolveParentEmbedderOrigin,
-} from "./preview-embedder-origin";
+} from "./preview-embedder-origin.ts";
 
 export const PREVIEW_BRIDGE_CHANNEL = "grok-preview-bridge" as const;
 export const PREVIEW_BRIDGE_VERSION = 1 as const;
